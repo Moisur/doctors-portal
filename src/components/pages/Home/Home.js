@@ -9,7 +9,7 @@ import ContactUs from './ContactUs';
 import Footer from '../Sheard/Footer/Footer';
 const Home = () => {
     return (
-        <div className='px-16'>
+        <div className='px-5 md:px-16'>
             <div style={{
                 background:`url(${backgroundImages})`,
                 backgroundPosition:'center',
