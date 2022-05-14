@@ -1,22 +1,29 @@
-import React from 'react';
+import React, {  } from 'react';
 import chair from '../../../assets/images/chair.png';
 import banner from '../../../assets/images/bg.png';
-const AppointmentBanner = () => {
+import { DayPicker } from 'react-day-picker';
+import 'react-day-picker/dist/style.css';
+
+const AppointmentBanner = ({selected, setSelected}) => {
     return (
         <div style={{
-            background:`url(${banner})`,
-            backgroundPosition:'center',
-            backgroundSize:'cover'
-        
-        }} class="hero min-h-screen">
-            <div class="hero-content flex-col lg:flex-row-reverse">
-                <div>
+            background: `url(${banner})`,
+            backgroundPosition: 'center',
+            backgroundSize: 'cover'
+
+        }} className="hero min-h-screen ">
+            <div className="hero-content flex-col lg:flex-row-reverse gap-10">
+                <div className='flex-1'>
                     <img src={chair} alt='Chair images ' />
                 </div>
-                <div>
-                    <h1 class="text-5xl font-bold">Box Office News!</h1>
-                    <p class="py-6">Provident cupiditate voluptatem et in. Quaerat fugiat ut assumenda excepturi exercitationem quasi. In deleniti eaque aut repudiandae et a id nisi.</p>
-                    <button class="btn btn-primary">Get Started</button>
+                <div className='flex-1 cursor-pointer'>
+                    <div className='md:w-52 mx-auto'>
+                        <DayPicker
+                            mode="single"
+                            selected={selected}
+                            onSelect={setSelected}
+                        />
+                    </div>
                 </div>
             </div>
         </div>
