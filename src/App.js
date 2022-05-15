@@ -5,6 +5,8 @@ import About from './components/pages/About/About';
 import Navbar from './components/pages/Sheard/Navbar/Navbar';
 import Login from './components/pages/Login/Login';
 import Appointment from './components/pages/Appointment/Appointment';
+import SignUp from './components/pages/SignUp/SignUp';
+import RequireAuth from './components/pages/Sheard/RequireAuth/RequireAuth';
 
 function App() {
   return (
@@ -15,7 +17,10 @@ function App() {
         <Route path="/home" element={<Home />} />
         <Route path="/about" element={<About />} />
         <Route path="/login" element={<Login />} />
-        <Route path="/appointment" element={<Appointment />} />
+        <Route path="/appointment" element={<RequireAuth>
+          <Appointment></Appointment>
+        </RequireAuth>} />
+        <Route path="/signup" element={<SignUp/>} />
       </Routes>
     </div>
   );

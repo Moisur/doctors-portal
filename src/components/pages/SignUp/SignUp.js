@@ -1,23 +1,23 @@
 import React from 'react';
 import auth from '../../../firebase.init';
-import { useSignInWithEmailAndPassword, useSignInWithGoogle } from 'react-firebase-hooks/auth';
+import { useCreateUserWithEmailAndPassword, useSignInWithGoogle, useUpdateProfile } from 'react-firebase-hooks/auth';
 import { useForm } from "react-hook-form";
 import LoaderSpinner from '../Sheard/LoaderSpinner/LoaderSpinner';
-import { Link, useLocation, useNavigate } from 'react-router-dom';
-
-const Login = () => {
+import { Link, useNavigate } from 'react-router-dom';
+const SignUp = () => {
     let firebaseError;
-    const navigate= useNavigate()
-    let location = useLocation();
-  
-    let from = location.state?.from?.pathname || "/";
-
-
+    const Navigation= useNavigate()
     const { register, formState: { errors }, handleSubmit } = useForm();
     const [signInWithGoogle, gUser, gLoading, gError] = useSignInWithGoogle(auth);
-    const [signInWithEmailAndPassword, user, loading, error,] = useSignInWithEmailAndPassword(auth);
+    const [
+        createUserWithEmailAndPassword,
+        user,
+        loading,
+        error,
+      ] = useCreateUserWithEmailAndPassword(auth);
+      const [updateProfile, updating, updatEerror] = useUpdateProfile(auth);
     if (user || gUser) {
-        navigate(from, { replace: true });
+        Navigation('/')
     }
 
     if (gError || error) {
@@ -26,11 +26,13 @@ const Login = () => {
     if (gLoading || loading) {
         return <LoaderSpinner></LoaderSpinner>
     }
-    const onSubmit = data => {
+    const onSubmit =async data => {
+        const name = data.name;
         const email = data.email;
         const password = data.password;
         if (email && password) {
-            signInWithEmailAndPassword(email, password)
+           await createUserWithEmailAndPassword(email, password)
+           await updateProfile({ displayName:name});
         }
     };
 
@@ -38,8 +40,25 @@ const Login = () => {
         <div className='flex justify-center items-center h-[80vh]'>
             <div class="card w-96 bg-base-100 shadow-xl">
                 <div class="card-body">
-                    <h1 className='text-center text-xl font-medium'>Login</h1>
+                    <h1 className='text-center text-xl font-medium'>Sign Up</h1>
                     <form onSubmit={handleSubmit(onSubmit)}>
+                        <div class="form-control w-full max-w-xs">
+                            <label class="label">
+                                <span class="label-text">Email</span>
+                            </label>
+                            <input type="text"
+                                {...register("name", {
+                                    required: {
+                                        value: true,
+                                        message: 'pleas String Name'
+                                    },
+                                })}
+                                placeholder="enter you name"
+                                class="input input-bordered w-full max-w-xs" />
+                            <label class="label">
+                                {errors.email?.type === 'required' && <span className='font-bold text-red-600'>{errors.name.message}</span>}
+                            </label>
+                        </div>
                         <div class="form-control w-full max-w-xs">
                             <label class="label">
                                 <span class="label-text">Email</span>
@@ -48,7 +67,7 @@ const Login = () => {
                                 {...register("email", {
                                     required: {
                                         value: true,
-                                        message: 'pleas String word'
+                                        message: 'pleas String Email'
                                     },
                                     pattern: {
                                         value: /\S+@\S+\.\S+/,
@@ -87,8 +106,8 @@ const Login = () => {
                         {
                             firebaseError
                         }
-                        <input className='btn w-full max-w-xs' type="submit" value='Login' />
-                        <p>New to Doctors Portal?<Link className='text-secondary' to='/signup'> Create new account</Link></p>
+                        <input className='btn w-full max-w-xs' type="submit" value='SignUp' />
+                        <p>New to Doctors Portal?<Link className='text-secondary' to='/login'> You Account</Link></p>
                     </form>
                     <div class="divider">OR</div>
                     <button onClick={() => signInWithGoogle()} class="btn btn-outline ">CONTINUE WITH GOOGLE</button>
@@ -98,4 +117,4 @@ const Login = () => {
     );
 };
 
-export default Login;
+export default SignUp;
