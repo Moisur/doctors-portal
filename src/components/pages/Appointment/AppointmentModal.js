@@ -1,16 +1,35 @@
 import { format } from 'date-fns';
 import React from 'react';
+import { useAuthState } from 'react-firebase-hooks/auth';
+import auth from '../../../firebase.init';
 
-const AppointmentModal = ({ Modal, data,setModalData}) => {
+const AppointmentModal = ({ Modal, data, setModalData }) => {
+    const [user, loading, error] = useAuthState(auth);
+    console.log(Modal.name)
     const BookModal = (event) => {
         event.preventDefault()
-        const name = event.target.name.value;
-        const number = event.target.number.value;
-        const email = event.target.email.value;
-        const slot = event.target.slot.value;
+        const name= Modal.name
         const date = event.target.date.value;
-        console.log(name,number,email,slot,date)
-        // setModalData(null)
+        const slot = event.target.slot.value;
+        const user = event.target.name.value;
+        const email = event.target.email.value;
+        const number = event.target.number.value;
+        const AppointmentBooks ={
+            name,date,slot,user,email,number
+        }
+        fetch('http://localhost:5000/booking',{
+            method:"POST",
+            headers:{
+                'Content-Type': 'application/json',
+           },
+           body: JSON.stringify(AppointmentBooks),
+        })
+        .then(res=>res.json())
+        .then(data=>{
+            if(data){
+                setModalData(null)
+            }
+        })
     }
     return (
         <div>
@@ -26,10 +45,10 @@ const AppointmentModal = ({ Modal, data,setModalData}) => {
                                 Modal?.slots?.map(slot => <option key={slot} >{slot}</option>)
                             }
                         </select>
-                        <input name='name' type="text" placeholder='Full Name' className="input input-bordered w-full max-w-xs" />
-                        <input name='number' type="number" placeholder='Phone Number' className="input input-bordered w-full max-w-xs" />
-                        <input name='email' type="email" placeholder='Email' className="input input-bordered w-full max-w-xs" />
-                        <input type="submit" className="bg-secondary py-2 text-white rounded w-full" />
+                        <input name='name' type="text" value={user.displayName} disabled className="input input-bordered w-full max-w-xs" />
+                        <input name='email' type="email" value={user.email} disabled className="input input-bordered w-full max-w-xs" />
+                        <input name='number' type="number" placeholder='Phone Number' className="input input-bordered w-full max-w-xs" required/>
+                        <input type="submit" value='Books' className="bg-secondary py-2 text-white rounded w-full" />
                     </form>
                 </div>
             </div>
