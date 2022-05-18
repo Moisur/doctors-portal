@@ -1,27 +1,36 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import auth from '../../../firebase.init';
 import { useSignInWithEmailAndPassword, useSignInWithGoogle } from 'react-firebase-hooks/auth';
 import { useForm } from "react-hook-form";
 import LoaderSpinner from '../Sheard/LoaderSpinner/LoaderSpinner';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
+import useToken from '../../../Hook/useToken';
 
 const Login = () => {
     let firebaseError;
-    const navigate= useNavigate()
+    const navigate = useNavigate()
     let location = useLocation();
-  
+
     let from = location.state?.from?.pathname || "/";
 
 
     const { register, formState: { errors }, handleSubmit } = useForm();
     const [signInWithGoogle, gUser, gLoading, gError] = useSignInWithGoogle(auth);
     const [signInWithEmailAndPassword, user, loading, error,] = useSignInWithEmailAndPassword(auth);
-    if (user || gUser) {
+    console.log(user)
+    console.log(gUser)
+    const [tokenAccess] = useToken(user || gUser)
+    if (tokenAccess) {
+        console.log(tokenAccess)
         navigate(from, { replace: true });
     }
+    // useEffect(() => {
+       
+    // },[tokenAccess,from,navigate])
+
 
     if (gError || error) {
-        firebaseError =<small className='text-red-600 text-center'>{gError?.message || error?.message}</small>
+        firebaseError = <small className='text-red-600 text-center'>{gError?.message || error?.message}</small>
     }
     if (gLoading || loading) {
         return <LoaderSpinner></LoaderSpinner>

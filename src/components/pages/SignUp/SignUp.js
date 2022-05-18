@@ -4,9 +4,10 @@ import { useCreateUserWithEmailAndPassword, useSignInWithGoogle, useUpdateProfil
 import { useForm } from "react-hook-form";
 import LoaderSpinner from '../Sheard/LoaderSpinner/LoaderSpinner';
 import { Link, useNavigate } from 'react-router-dom';
+import useToken from '../../../Hook/useToken';
 const SignUp = () => {
     let firebaseError;
-    const Navigation= useNavigate()
+    const Navigation = useNavigate()
     const { register, formState: { errors }, handleSubmit } = useForm();
     const [signInWithGoogle, gUser, gLoading, gError] = useSignInWithGoogle(auth);
     const [
@@ -14,25 +15,28 @@ const SignUp = () => {
         user,
         loading,
         error,
-      ] = useCreateUserWithEmailAndPassword(auth);
-      const [updateProfile, updating, updatEerror] = useUpdateProfile(auth);
-    if (user || gUser) {
+    ] = useCreateUserWithEmailAndPassword(auth);
+    const [updateProfile, updating, updatEerror] = useUpdateProfile(auth);
+    
+    const [tokenAccess] = useToken(user || gUser)
+    if (tokenAccess) {
+        console.log(tokenAccess)
         Navigation('/')
     }
 
     if (gError || error) {
-        firebaseError =<small className='text-red-600 text-center'>{gError?.message || error?.message}</small>
+        firebaseError = <small className='text-red-600 text-center'>{gError?.message || error?.message}</small>
     }
     if (gLoading || loading) {
         return <LoaderSpinner></LoaderSpinner>
     }
-    const onSubmit =async data => {
+    const onSubmit = async data => {
         const name = data.name;
         const email = data.email;
         const password = data.password;
         if (email && password) {
-           await createUserWithEmailAndPassword(email, password)
-           await updateProfile({ displayName:name});
+            await createUserWithEmailAndPassword(email, password)
+            await updateProfile({ displayName: name });
         }
     };
 
