@@ -12,6 +12,8 @@ import 'react-toastify/dist/ReactToastify.css';
 import Dashboard from './components/pages/Dashboard/Dashboard';
 import MyDashboard from './components/pages/Dashboard/MyDashboard';
 import MyReview from './components/pages/Dashboard/MyReview';
+import Users from './components/pages/Dashboard/Users';
+import UserRequireAuth from './components/pages/Sheard/RequireAuth/UserRequireAuth';
 
 function App() {
   return (
@@ -31,6 +33,7 @@ function App() {
         </RequireAuth>}>
           <Route index element={<MyDashboard />}/>
           <Route path="myReview" element={<MyReview />} />
+          <Route path="allUser" element={<UserRequireAuth><Users /></UserRequireAuth>} />
         </Route>
         <Route path="/signup" element={<SignUp />} />
       </Routes>

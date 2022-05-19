@@ -17,16 +17,16 @@ const Login = () => {
     const { register, formState: { errors }, handleSubmit } = useForm();
     const [signInWithGoogle, gUser, gLoading, gError] = useSignInWithGoogle(auth);
     const [signInWithEmailAndPassword, user, loading, error,] = useSignInWithEmailAndPassword(auth);
-    console.log(user)
-    console.log(gUser)
+    
+   
     const [tokenAccess] = useToken(user || gUser)
-    if (tokenAccess) {
-        console.log(tokenAccess)
-        navigate(from, { replace: true });
-    }
-    // useEffect(() => {
-       
-    // },[tokenAccess,from,navigate])
+
+    useEffect(() => {
+        if (tokenAccess) {
+            console.log(tokenAccess)
+            navigate(from, { replace: true });
+        }
+    }, [tokenAccess, from, navigate])
 
 
     if (gError || error) {

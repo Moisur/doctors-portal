@@ -20,7 +20,6 @@ const SignUp = () => {
     
     const [tokenAccess] = useToken(user || gUser)
     if (tokenAccess) {
-        console.log(tokenAccess)
         Navigation('/')
     }
 
